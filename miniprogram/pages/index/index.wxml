@@ -1,20 +1,34 @@
 <!-- index.wxml -->
 <view class="container">
   <view class="banner">
-    <text>佳越轮胎</text>
+    <image src="/images/whitelogo.png" style="width: 320rpx; height: 100rpx;"/>
   </view>
   <view class="logo">
     <image style="width: 100%; height: 440rpx;" src="/images/wheelspin.gif"></image>
   </view>
-  <view></view>
+  <view class="statistics">
+    <text>您的周边已有</text><text style="color:red">1432</text><text>人选择了</text>
+    <view>
+      <image src="/images/whitelogotext.png" style="width:220rpx; height: 70rpx;"/>
+    </view>
+  </view>
   <view class="buttons">
     <view class="row">
-      <button>我的质保卡</button>
-      <button>品牌介绍</button>
+      <navigator>
+        <text class="iconfont icon-safety-icon"></text>
+        <text>我的质保</text>
+      </navigator>
+      <navigator url="../about/about" open-type="navigate">
+        <text class="iconfont icon-brand-icon"></text>品牌介绍</navigator>
     </view>
     <view class="row">
-      <button>个人中心</button>
-      <button>积分商城</button>
+      <navigator url="../userConsole/userConsole" open-type="navigate">
+        <text class="iconfont icon-user-icon"></text>
+        个人中心
+        </navigator>
+      <navigator>
+         <text class="iconfont icon-car-icon"></text>
+         积分商城</navigator>
     </view>
   </view>
   <!-- <view class="userinfo">

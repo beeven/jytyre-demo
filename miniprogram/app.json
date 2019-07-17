@@ -10,9 +10,9 @@
     "pages/openapi/openapi"
   ],
   "window": {
-    "backgroundColor": "#222",
+    "backgroundColor": "transparent",
     "backgroundTextStyle": "dark",
-    "navigationBarBackgroundColor": "#222",
+    "navigationBarBackgroundColor": "#000",
     "navigationBarTitleText": "",
     "navigationBarTextStyle": "white"
   },
