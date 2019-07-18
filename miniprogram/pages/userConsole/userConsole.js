@@ -1,13 +1,21 @@
 // pages/userConsole/userConsole.js
+
+const app = getApp();
+
 Page({
 
   data: {
     openid: ''
   },
 
-  onLoad: function (options) {
+  async onLoad(options) {
+    await app.functions.ensureLogin();
+  
+    let info = await app.functions.getUserInfo();
     this.setData({
-      openid: getApp().globalData.openid
+      openid: info.openid
     })
+
+    
   }
 })

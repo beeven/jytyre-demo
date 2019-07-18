@@ -4,7 +4,7 @@
     <image src="/images/whitelogo.png" style="width: 320rpx; height: 100rpx;"/>
   </view>
   <view class="logo">
-    <image style="width: 100%; height: 440rpx;" src="/images/wheelspin.gif"></image>
+    <image style="" src="/images/wheelspin.gif"></image>
   </view>
   <view class="statistics">
     <text>您的周边已有</text><text style="color:red">1432</text><text>人选择了</text>
