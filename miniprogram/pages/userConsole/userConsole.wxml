@@ -1,8 +1,22 @@
 <!--pages/userConsole/userConsole.wxml-->
 <view class="container">
 
-  <view>
-    <image src="{{avatarurl}}">
+  <view class="avatar">
+    <image src="{{avatarUrl}}" />
+  </view>
+
+  <view class="username">
+    <text>{{userName}}</text>
+  </view>
+
+  <view class="phone">
+   <view>
+    <text class="iconfont icon-phone-icon"></text>
+    <input type="text" value="{{phoneNumber}}" disabled="{{hasPhoneNumber}}" placeholder="请填写手机号码"/>
+    </view>
+  </view>
+  <view class="save-button" wx:if="{{!hasPhoneNumber}}">
+    <button bindtap="saveInfo">保  存</button>
   </view>
 
 </view>

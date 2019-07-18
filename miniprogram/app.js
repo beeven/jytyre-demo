@@ -17,8 +17,8 @@ App({
     }
 
     this.functions = {
-      ensureLogin: async () => {
-        await new Promise((resolve, reject)=>{
+      ensureLogin: () => {
+        return new Promise((resolve, reject)=>{
           wx.checkSession({
             success: () => {
               resolve();
@@ -43,8 +43,8 @@ App({
         })
       },
 
-      getUserInfo: async () => {
-        await new Promise((resolve,reject)=>{
+      getUserInfo: () => {
+        return new Promise((resolve,reject)=>{
           wx.getSetting({
             success: res => {
               if(res.authSetting['scope.userInfo']){
@@ -54,10 +54,10 @@ App({
               } else {
                 ensureLogin().then(()=>{
                   return updateUserInfo()
-                })
-                .then((info)=>{
-                  resolve(info);
-                })
+                    .then((info)=>{
+                      resolve(info);
+                    })
+                });
               }
             },
             fail: err => {
@@ -65,21 +65,7 @@ App({
             }
           })
         })
-        wx.getSetting({
-          success: res => {
-            if (res.authSetting['scope.userInfo']) {
-              // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-              wx.getUserInfo({
-                success: res => {
-                  this.setData({
-                    avatarUrl: res.userInfo.avatarUrl,
-                    userInfo: res.userInfo
-                  })
-                }
-              })
-            }
-          }
-        })
+        
       }
     }
   }
