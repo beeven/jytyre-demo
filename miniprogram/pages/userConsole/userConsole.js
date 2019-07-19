@@ -7,62 +7,127 @@ Page({
   data: {
     openid: '',
     avatarUrl: "./user-unlogin.png",
-    userName: "未登录",
+    nickName: "未登录",
     phoneNumber: "",
     hasPhoneNumber: false
   },
 
-  onLoad: async function(options) {
+  onLoad: async function (options) {
     if (app.globalData.userInfo) {
-      this.setData({
-        userName: app.globalData.userInfo.nickName,
-        avatarUrl: app.globalData.userInfo.avatarUrl
-      });
+      if (app.globalData.userInfo.phoneNumber) {
+        this.setData({
+          nickName: app.globalData.userInfo.nickName,
+          avatarUrl: app.globalData.userInfo.avatarUrl,
+          phoneNumber: app.globalData.userInfo.phoneNumber
+        });
+      } else {
+        this.setData({
+          nickName: app.globalData.userInfo.nickName,
+          avatarUrl: app.globalData.userInfo.avatarUrl
+        });
+        fillPhoneNumber(this);
+      }
     } else {
       await app.functions.ensureLogin();
-  
       let info = await app.functions.getUserInfo();
-      console.log(info);
+
       this.setData({
-        userName: info.nickName,
+        nickName: info.nickName,
         avatarUrl: info.avatarUrl
       });
+
+      fillPhoneNumber(this);
     }
   },
 
-  saveInfo: async function() {
-    await saveUserInfo({
-      phoneNumber: this.phoneNumber,
-      userName: this.userName,
-      avatarUrl: this.avatarUrl,
-    })
+  inputedit: function(e){
+    let value = e.detail.value;
+    this.setData({
+      phoneNumber: value
+    });
+  },
+
+  saveInfo: async function () {
+    app.globalData.userInfo.phoneNumber = this.data.phoneNumber;
+    await saveUserInfo()
   }
 })
 
 
-async function getPhoneNumber() {
-  wx.getPhoneNumber({
-    success: res => {
 
-    }
-  })
+async function getPhoneNumber() {
+  await new Promise((resolve, reject) => {
+    wx.getPhoneNumber({
+      success: res => {
+        resolve(res.result.phoneNumber);
+      },
+      fail: (err) => {
+        reject(err);
+      }
+    })
+  });
 }
 
-async function saveUserInfo(info) {
-  if(app.globalData.useCloud) {
+async function fillPhoneNumber(page) {
+
+  let phoneNumber = "";
+  try {
+    phoneNumber = await getPhoneNumber();
+    app.globalData.userInfo.phoneNumber = phoneNumber;
+    page.setData({
+      hasPhoneNumber: true
+    });
+    await saveUserInfo();
+  } catch (err) {
+    let user = await loadUserInfo();
+    if (user.phoneNumber) {
+      phoneNumber = user.phoneNumber
+      app.globalData.userInfo.phoneNumber = phoneNumber;
+    }
+  }
+  page.setData({
+    phoneNumber: phoneNumber,
+  });
+  return phoneNumber;
+}
+
+async function saveUserInfo() {
+  wx.showLoading({
+    'title': '保存中'
+  });
+  if (app.globalData.useCloud) {
     const db = wx.cloud.database();
-    const _ = db.command;
-    const users = db.collection("users");
-    await users.where({
-      _openid: app.globalData.user
-    }).update({
+    await db.collection("users").doc(app.globalData.openid).set({
       data: {
-        phoneNumber: _.set(info.phoneNumber),
-        userName: _.set(info.userName),
-        avatarUrl: _.set(info.avatarUrl)
+        phoneNumber: app.globalData.userInfo.phoneNumber,
+        nickName: app.globalData.userInfo.nickName,
+        avatarUrl: app.globalData.userInfo.avatarUrl,
       }
     });
+    wx.hideLoading();
+    wx.showToast({
+      title: '已保存',
+      icon: 'success',
+      duration: 1000
+    })
   } else {
+    // TODO: save user to server logic
+    wx.request({
+      url: "https://xxxxx/xxx",
+      method: "POST",
+      data: info
+    })
+  }
+}
+
+async function loadUserInfo() {
+  if (app.globalData.useCloud) {
+    const db = wx.cloud.database();
+    let res = await db.collection("users").doc(app.globalData.openid).get();
+    console.log(res.data);
+    return res.data;
+  } else {
+    // TODO: load user from server logic
     wx.request({
       url: "https://xxxxx/xxx",
       method: "POST",

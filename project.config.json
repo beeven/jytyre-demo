@@ -11,9 +11,14 @@
 		"checkInvalidKey": true,
 		"nodeModules": true
 	},
+	"scripts": {
+		"beforeCompile": "npm run tsc",
+		"beforePreview": "npm run tsc",
+		"beforeUpload": "npm run tsc"
+	},
 	"appid": "wx736fa4ab61ccc2d4",
 	"projectname": "jytyre-demo",
-	"libVersion": "2.2.5",
+	"libVersion": "2.4.0",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"condition": {

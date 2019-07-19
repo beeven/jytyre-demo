@@ -6,13 +6,13 @@
   </view>
 
   <view class="username">
-    <text>{{userName}}</text>
+    <text>{{nickName}}</text>
   </view>
 
   <view class="phone">
    <view>
     <text class="iconfont icon-phone-icon"></text>
-    <input type="text" value="{{phoneNumber}}" disabled="{{hasPhoneNumber}}" placeholder="请填写手机号码"/>
+    <input type="text" value="{{phoneNumber}}" disabled="{{hasPhoneNumber}}" bindinput="inputedit" placeholder="请填写手机号码"/>
     </view>
   </view>
   <view class="save-button" wx:if="{{!hasPhoneNumber}}">
