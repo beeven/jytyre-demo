@@ -1,6 +1,0 @@
-<view class="container">
-    <view>
-        <text>这里用web-view链接公司简介页面</text>
-    </view>
-    <web-view src="https://x.eqxiu.com/s/mGnju6Lu?eqrcode=1&share_level=2&from_user=20190714a3e19762&from_id=57b89a39-f&share_time=1563378858635&from=groupmessage" />
-</view>

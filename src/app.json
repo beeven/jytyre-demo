@@ -4,9 +4,6 @@
     "pages/userConsole/userConsole",
     "pages/insurance/insurance"
   ],
-  "subPackages": [],
-  "plugins": {},
-  "preloadRule": {},
   "window": {
     "backgroundColor": "transparent",
     "backgroundTextStyle": "dark",

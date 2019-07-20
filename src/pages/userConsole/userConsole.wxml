@@ -1,0 +1,29 @@
+<!--pages/userConsole/userConsole.wxml-->
+<view class="container">
+
+  <view class="avatar">
+    <image src="{{avatarUrl}}" />
+  </view>
+
+  <view class="username">
+    <text>{{nickName}}</text>
+  </view>
+
+  <view class="phone">
+   <view>
+    <text class="iconfont icon-phone-icon"></text>
+    <button class="auth-button" open-type="getPhoneNumber" bindgetphonenumber="onGetPhoneNumber" 
+        wx:if="{{!hasPhoneNumber && !editPhoneNumber}}">授权获取手机号码</button>
+    <input type="text" value="{{phoneNumber}}" disabled="{{hasPhoneNumber}}" 
+      bindinput="inputedit" placeholder="请填写手机号码"
+      wx:if="{{hasPhoneNumber || editPhoneNumber}}"/>
+    </view>
+  </view>
+  <view class="edit-button" wx:if="{{hasPhoneNumber && !editPhoneNumber}}">
+    <button bindtap="editNumber">编辑手机号码</button>
+  </view>
+  <view class="save-button" wx:if="{{!hasPhoneNumber && editPhoneNumber}}">
+    <button bindtap="saveInfo">保  存</button>
+  </view>
+
+</view>
