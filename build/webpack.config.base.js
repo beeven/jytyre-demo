@@ -24,7 +24,7 @@ module.exports = {
     // path.resolve(__dirname, utils.resolve('src/plugin/plugin.json'))
   ],
   output: {
-    path: path.resolve(__dirname, utils.resolve('miniprogram'))
+    path: path.resolve(__dirname, utils.resolve('dist'))
   },
   resolve: {
     // 你可以在 json wxml wxss scss 中使用这里配置的 alias
@@ -39,7 +39,7 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin([{
       from: path.resolve(__dirname, utils.resolve('src/assets')),
-      to: path.resolve(__dirname, utils.resolve('dist/assets'))
+      to: path.resolve(__dirname, utils.resolve('assets'))
     }]),
     new MiniPlugin({
       // extfile: true,

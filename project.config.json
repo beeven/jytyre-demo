@@ -1,5 +1,5 @@
 {
-	"miniprogramRoot": "miniprogram/",
+	"miniprogramRoot": "dist/",
 	"cloudfunctionRoot": "cloudfunctions/",
 	"setting": {
 		"urlCheck": true,
@@ -19,11 +19,6 @@
 			"disablePlugins": [],
 			"outputPath": ""
 		}
-	},
-	"scripts": {
-		"beforeCompile": "npm run tsc",
-		"beforePreview": "npm run tsc",
-		"beforeUpload": "npm run tsc"
 	},
 	"appid": "wx736fa4ab61ccc2d4",
 	"projectname": "jytyre-demo",

@@ -4,7 +4,9 @@
   "scripts": {
     "compile": "./node_modules/typescript/bin/tsc",
     "tsc": "node ./node_modules/typescript/lib/tsc.js",
-    "dev": "NODE_ENV=development webpack --watch --progress --mode=development --config build/webpack.config.dev.js",
+    "tsc-watch": "node ./node_modules/typescript/lib/tsc.js -w",
+    "dev":"concurrently \"npm:tsc-watch\" \"npm:build-dev\"",
+    "build-dev": "NODE_ENV=development webpack --watch --progress --mode=development --config build/webpack.config.dev.js",
     "build": "NODE_ENV=production webpack --progress --mode=production --config build/webpack.config.prod.js",
     "lint": "eslint --fix --ext .js src"
   },
@@ -17,6 +19,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "^6.24.1",
     "clean-webpack-plugin": "^1.0.0",
+    "concurrently": "^4.1.1",
     "copy-webpack-plugin": "^4.6.0",
     "cssnano": "^4.1.7",
     "dotenv-webpack": "^1.5.7",

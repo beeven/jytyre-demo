@@ -28,10 +28,6 @@ Page({
             items: items
         })
 
-        for(let i=0;i<3;i++) {
-            await saveSampleInsurance();
-        }
-
     },
 
 
@@ -49,7 +45,7 @@ async function loadInsuranceList(){
         ret.push({
             insuranceID: item._id!.toString(),
             plate: item["plate"],
-            dateCreated: (new Date()).toString()
+            dateCreated: formatTime(new Date()).substr(0,10)
         })
     });
     return ret;
@@ -60,7 +56,7 @@ async function saveSampleInsurance(){
     let ret = await db.collection("insurance").add({
         data: {
             plate: "粤A DE"+ Math.round((Math.random() * 1000)).toString().padStart(3,'0'),
-            dateCreated: (new Date()) 
+            dateCreated: new Date()
         } 
     });
     return ret._id;
