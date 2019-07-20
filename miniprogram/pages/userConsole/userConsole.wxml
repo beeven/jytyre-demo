@@ -12,10 +12,17 @@
   <view class="phone">
    <view>
     <text class="iconfont icon-phone-icon"></text>
-    <input type="text" value="{{phoneNumber}}" disabled="{{hasPhoneNumber}}" bindinput="inputedit" placeholder="请填写手机号码"/>
+    <button class="auth-button" open-type="getPhoneNumber" bindgetphonenumber="onGetPhoneNumber" 
+        wx:if="{{!hasPhoneNumber && !editPhoneNumber}}">授权获取手机号码</button>
+    <input type="text" value="{{phoneNumber}}" disabled="{{hasPhoneNumber}}" 
+      bindinput="inputedit" placeholder="请填写手机号码"
+      wx:if="{{hasPhoneNumber || editPhoneNumber}}"/>
     </view>
   </view>
-  <view class="save-button" wx:if="{{!hasPhoneNumber}}">
+  <view class="edit-button" wx:if="{{hasPhoneNumber && !editPhoneNumber}}">
+    <button bindtap="editNumber">编辑手机号码</button>
+  </view>
+  <view class="save-button" wx:if="{{!hasPhoneNumber && editPhoneNumber}}">
     <button bindtap="saveInfo">保  存</button>
   </view>
 

@@ -1,2 +1,10 @@
 <view class="container">
+    <view class="insuranceItems">
+        <view wx:for="{{items}}">
+            <navigator url="./detail?id={{item._id}}" open-type="navigate">
+            <text>{{item.plate}}</text>
+            <text>{{item.dateCreated}}</text>
+            </navigator>
+        </view>
+    </view>
 </view>

@@ -6,6 +6,11 @@
     "tsc": "node ./node_modules/typescript/lib/tsc.js"
   },
   "devDependencies": {
-    "typescript": "^3.3.3333"
+    "@beeven/miniprogram-typings": "github:beeven/miniprogram-typings",
+    "typescript": "^3.3.3333",
+    "wxapp-webpack-plugin": "^0.19.0"
+  },
+  "dependencies": {
+    "moment": "^2.24.0"
   }
 }

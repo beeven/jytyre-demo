@@ -45,6 +45,11 @@
     width: 100%;
 }
 
+.auth-button {
+    background-color: rgba(182, 25, 25, 0.8);
+    color: white;
+}
+
 .phone text.iconfont {
     font-size: 1.5rem;
     background-color: rgba(182, 25, 25, 0.8);
@@ -61,13 +66,13 @@
     border-bottom: 1rpx solid black;
 }
 
-.save-button {
+.save-button, .edit-button {
     margin-top: 100rpx;
     width: 100%;
     
 }
 
-.save-button button {
+.save-button button, .edit-button button {
     display: block;
     background: rgba(182, 25, 25, 0.8);
     color: white;
