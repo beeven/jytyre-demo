@@ -1,2 +1,36 @@
 <view class="container">
+    <view class="fields">
+        <view class="weui-cells__title">注册365质保</view>
+        <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__hd">
+                    <view class="weui-label">门店名称</view>
+                </view>
+                <view class="weui-cell__bd">
+                    <input type="text" class="weui-input" placeholder="请输入门店名称" value="{{shopName}}" />
+                </view>
+            </view>
+            <view class="weui-cell weui-cell_input weui-cell_vcode">
+                <view class="weui-cell__hd">
+                    <view class="weui-label">门店位置</view>
+                </view>
+                <view class="weui-cell__bd">
+                    <input type="text" class="weui-input" placeholder="请输入门店地址" value="{{shopAddress}}" />
+                </view>
+                <view class="weui-cell__ft">
+                    <view class="weui-vcode-btn" bindtap="onGetLocation">定位选择</view>
+                </view>
+            </view>
+            <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__hd">
+                    <view class="weui-label">购买日期</view>
+                </view>
+                <view class="weui-cell__bd">
+                    <picker mode="date" value="{{datePurchased}}" bindchange="onDateChanged">
+                        <view class="weui-input">{{datePurchased}}</view>
+                    </picker>
+                </view>
+            </view>
+        </view>
     </view>
+</view>

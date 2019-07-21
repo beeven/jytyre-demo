@@ -1,6 +1,6 @@
 import { IMyApp } from "../../app";
-import { formatTime } from '../../utils/util';
-import { warrantyService } from './warranty.service';
+import * as moment from "moment-mini-ts";
+import { warrantyService, ApprovalStatus } from './warranty.service';
 
 const app = getApp<IMyApp>();
 
@@ -11,6 +11,7 @@ export interface WarrantyListItem {
     plate: string;
     description: string;
     thumbnail: string;
+    approvalStatus: ApprovalStatus;
 }
 
 interface WarrantyPageData {
@@ -25,6 +26,7 @@ Page({
         ]
     } as WarrantyPageData,
     async onLoad() {
+        await app.ensureLogin();
         wx.showToast({
             title: '数据加载中',
             icon: 'loading',
@@ -39,7 +41,8 @@ Page({
                 id: item._id,
                 plate: item.plate,
                 thumbnail: item.thumbnail,
-                description: `质保期限：${formatTime(item.startDate).substr(0,10)} 至 ${formatTime(item.endDate).substr(0,10)}`
+                description: `质保期限： ${moment(item.endDate).format("YYYY-MM-DD")}`,
+                approvalStatus: item.approvalStatus
             });
         })
         console.log(warrantyItems);
@@ -51,6 +54,20 @@ Page({
         })
 
     },
+
+    onShow() {
+        console.log(this.route);
+    },
+
+    onItemClicked(e: event.Touch) {
+        console.log(e);
+        let itemId = e.currentTarget.dataset["itemId"];
+        wx.navigateTo({
+            url: "./detail/detail?id=" + itemId,
+        })
+    },
+
+
 
     addNew() {
         wx.navigateTo({

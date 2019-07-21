@@ -88,6 +88,11 @@ Page({
 
     async onGetPhoneNumber(e: event.ButtonGetPhoneNumber) {
         if(e.detail.errMsg) {
+            wx.showToast({
+                title: '无法获得授权，请输入',
+                icon: 'none',
+                duration: 1000
+            })
             this.setData({
                 editPhoneNumber: true
             });

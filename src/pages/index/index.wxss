@@ -56,11 +56,14 @@ page {
   align-items: stretch;
   padding-left: 30rpx;
   padding-right: 30rpx;
+  margin-left: 30rpx;
+  margin-right: 30rpx;
 }
 
 
 
-.row navigator {
+.row navigator,
+.row button {
   flex: 1 1;
   display: flex;
   font-size: 1rem;
@@ -69,18 +72,23 @@ page {
   align-items: center;
   justify-content: center;
   height: 130rpx;
+  padding: 0;
+  margin: 0;
   /* background: rgb(30,29,43);
   border-radius: 20rpx;
   margin: 10rpx; */
 }
-.row:first-of-type navigator {
+
+.row:first-of-type {
   border-bottom: 3rpx solid rgba(234,30,99, 0.3);
 }
-.row navigator:first-of-type {
+
+.row button:first-child,
+.row navigator:first-child {
   border-right: 3rpx solid rgba(234,30,99,0.3);
 }
 
-.row navigator text {
+.row text {
   display: block;
 }
 

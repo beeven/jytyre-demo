@@ -1,13 +1,31 @@
 import { IMyApp } from "../../app";
 
 
-
+const app = getApp<IMyApp>();
 
 Page({
   async onLoad() {
-    let app = getApp<IMyApp>();
     await app.ensureLogin();
-    await app.getUserInfo();
+  },
+
+  onGetUserInfo(e: event.ButtonGetUserInfo) {
+
+    if(e.detail.errMsg != "getUserInfo:ok") {
+      wx.showModal({
+        title: '先生贵姓？',
+        content: '请告诉我您是谁，才能给给您打开个人中心哦',
+        showCancel: false,
+        success: function (res) {
+            if (res.confirm) {
+                console.log('用户点击确定')
+            }
+        }
+      });
+    } else {
+      app.globalData.userInfo = e.detail.userInfo;
+      wx.navigateTo({url:"../userConsole/userConsole"});
+    }
+    
   }
 });
 

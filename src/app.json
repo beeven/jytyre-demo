@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/userConsole/userConsole",
     "pages/warranty/warranty",
-    "pages/warranty/detail/detail"
+    "pages/warranty/detail/detail",
+    "pages/warranty/add/add"
   ],
   "window": {
     "backgroundColor": "transparent",
@@ -15,5 +16,10 @@
   "sitemapLocation": "sitemap.json",
   "usingComponents": {
     
+  },
+  "permissions": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于协助注册365质保选择附近门店"
+    }
   }
 }

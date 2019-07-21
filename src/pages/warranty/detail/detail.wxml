@@ -1,3 +1,5 @@
-<view class="container">
-    
+<view>
+    <view>
+        <button class="weui-btn" type="warn" bindtap="onRemoveWarranty">撤销此条申请</button>
+    </view>
 </view>

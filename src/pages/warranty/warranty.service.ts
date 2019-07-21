@@ -3,24 +3,40 @@ import * as moment from "moment-mini-ts";
 
 const app = getApp<IMyApp>();
 
+export enum ApprovalStatus {
+    drafting = "drafting",
+    pending = "pending",
+    approved = "approved",
+    rejected = "rejected"
+}
+
+
 export interface WarrantyItem {
     _id: string;
     thumbnail: string;
     plate: string;
-    startDate: Date,
-    endDate: Date
+    endDate: Date,
+    approvalStatus: ApprovalStatus;
 }
 
 export interface WarrantyItemDetail {
     _id: string;
-    plate: string;
-    plateImageUrl: string;
-    shopImageUrl: string;
-    shopName: string;
-    shopAddress: string;
+    plate?: string;
+    plateImageUrl?: string;
+    shopImageUrl?: string;
+    shopName?: string;
+    shopAddress?: string;
+    shopLocation?: {
+        latitude: string;
+        longtitude: string;
+    }
     tyreImageUrls: string[];
-    startDate: Date;
-    endDate: Date
+    datePurchased?: Date;
+    endDate?: Date;
+    approvalStatus: ApprovalStatus;
+    dateCreated: Date;
+    lastUpdated: Date;
+    feedback?: string;
 }
 
 
@@ -39,8 +55,8 @@ export class WarrantyService {
             _id: true,
             thumbnail: true,
             plate: true,
-            startDate: true,
-            endDate: true
+            endDate: true,
+            approvalStatus: true
         }).get();
         let ret: WarrantyItem[] = [];
         items.data.forEach(item => {
@@ -48,8 +64,8 @@ export class WarrantyService {
                 _id: item._id!.toString(),
                 thumbnail: item["thumbnail"],
                 plate: item["plate"],
-                startDate: new Date(item["startDate"]),
-                endDate: new Date(item["endDate"])
+                endDate: new Date(item["endDate"]),
+                approvalStatus: item["approvalStatus"]
             })
         });
         return ret;
@@ -65,13 +81,32 @@ export class WarrantyService {
             shopImageUrl: ret.data["shopImageUrl"],
             shopName: ret.data["shopName"],
             tyreImageUrls: ret.data["tyreImageUrls"],
-            startDate: new Date(ret.data["startDate"]),
-            endDate: new Date(ret.data["endDate"])
+            datePurchased: new Date(ret.data["startDate"]),
+            endDate: new Date(ret.data["endDate"]),
+            approvalStatus: ret.data["approvalStatus"],
+            dateCreated: new Date(ret.data["dateCreated"]),
+            lastUpdated: new Date(ret.data["lastUpdated"]),
+            shopLocation: ret.data["shopLocation"]
         } as WarrantyItemDetail;
     }
 
-    async addWarrantyItem() {
+    async createWarrantyItem() {
+        let ret = await this.db.collection("warranty").add({
+            data: {
+                approvalStatus: ApprovalStatus.drafting,
+                dateCreated: new Date(),
+                lastUpdated: new Date()
+            } 
+        });
+        return ret._id;
+    }
 
+    async updateWarrantyItem(id: string) {
+    }
+
+    async removeWarrantyItem(id: string) {
+        let ret = await this.db.collection("warranty").doc(id).remove();
+        console.log(ret);
     }
 
     async samplingDatabase() {
