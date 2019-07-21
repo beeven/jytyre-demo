@@ -1,0 +1,27 @@
+<view class="container">
+    <view class="warranty-items">
+        <view class="weui-panel weui-panel_access">
+            <view class="weui-panel__hd">我的365质保</view>
+            <view class="weui-panel__bd" >
+            <view class="" wx:if="{{items.length == 0 && !loading}}">
+                <text>您尚未有注册的365质保，点击按钮注册</text>
+            </view>
+                <view wx:for="{{items}}" wx:key="id">
+                    <navigator class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" url="./detail/detail?id={{item.id}}" open-type="navigate">
+                        <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+                            <image class="weui-media-box__thumb" src="{{item.thumbnail}}" />
+                        </view>
+                        <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+                            <text class="weui-media-box_title">{{item.plate}}</text>
+                            <text class="weui-media-box__desc">{{item.description}}</text>
+                        </view>
+                        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+                    </navigator>
+                </view>
+            </view>
+        </view>
+        <view class="add-button">
+            <button bindtap="addNew" class="weui-btn" type="primary" >注册365质保</button>
+        </view>
+    </view>
+</view>

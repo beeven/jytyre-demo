@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/userConsole/userConsole",
-    "pages/insurance/insurance"
+    "pages/warranty/warranty",
+    "pages/warranty/detail/detail"
   ],
   "window": {
     "backgroundColor": "transparent",
@@ -11,5 +12,8 @@
     "navigationBarTitleText": "",
     "navigationBarTextStyle": "white"
   },
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "usingComponents": {
+    
+  }
 }

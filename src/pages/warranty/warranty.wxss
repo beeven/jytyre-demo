@@ -1,0 +1,13 @@
+.warranty-items {
+    width: 100%;
+}
+
+navigator.weui-media-box {
+    border-bottom: 1rpx solid #dedede;
+}
+
+.add-button {
+    margin-top: 50rpx;
+    padding-left: 40rpx;
+    padding-right: 40rpx;
+}

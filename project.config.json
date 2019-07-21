@@ -1,9 +1,9 @@
 {
-	"miniprogramRoot": "dist/",
+	"miniprogramRoot": "src/",
 	"cloudfunctionRoot": "cloudfunctions/",
 	"setting": {
 		"urlCheck": true,
-		"es6": false,
+		"es6": true,
 		"enhance": true,
 		"postcss": true,
 		"minified": true,

@@ -14,7 +14,7 @@
   </view>
   <view class="buttons">
     <view class="row">
-      <navigator url="../insurance/insurance" open-type="navigate">
+      <navigator url="../warranty/warranty" open-type="navigate">
         <text class="iconfont icon-safety-icon"></text>
         <text>我的质保</text>
       </navigator>

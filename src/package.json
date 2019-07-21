@@ -1,0 +1,5 @@
+{
+    "dependencies": {
+        "moment-mini-ts": "^2.20.1"
+      }
+}
