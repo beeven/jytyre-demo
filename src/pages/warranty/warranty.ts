@@ -14,12 +14,18 @@ export interface WarrantyListItem {
     approvalStatus: ApprovalStatus;
 }
 
-interface WarrantyPageData {
+export interface WarrantyPageData {
     items: WarrantyListItem[],
     loading: boolean
 }
 
-Page({
+export interface WarrantyPage {
+    onItemClicked(e: any): void;
+    addNew(): void;
+    onItemRemoved(id: string): void;
+}
+
+Page<WarrantyPageData, WarrantyPage>({
     data: {
         loading: true,
         items: [
@@ -73,6 +79,17 @@ Page({
         wx.navigateTo({
             url: './add/add?id=1'
         })
+    },
+
+
+    async onItemRemoved(id: string) {
+        let items = this.data.items;
+        let i = items.findIndex(x => x.id == id);
+        items.splice(i,1);
+        this.setData({
+            items: items
+        });
+        //await warrantyService.removeWarrantyItem(id);
     }
 
 })

@@ -17,7 +17,7 @@
   "usingComponents": {
     
   },
-  "permissions": {
+  "permission": {
     "scope.userLocation": {
       "desc": "你的位置信息将用于协助注册365质保选择附近门店"
     }

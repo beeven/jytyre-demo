@@ -15,20 +15,20 @@
   <view class="buttons">
     <view class="row">
       <navigator url="../warranty/warranty" open-type="navigate"  data-name="myWarranty">
-        <text class="iconfont icon-safety-icon"></text>
+        <text class="iconfont icon-anquan"></text>
         <text>我的质保</text>
       </navigator>
       <navigator url="../about/about" open-type="navigate">
-        <text class="iconfont icon-brand-icon"></text><text>品牌介绍</text>
+        <text class="iconfont icon-gongsi"></text><text>品牌介绍</text>
         </navigator>
     </view>
     <view class="row">
       <button bindgetuserinfo="onGetUserInfo" open-type="getUserInfo" hover-class="none"  date-name="userConsole">
-        <text class="iconfont icon-user-icon"></text>
+        <text class="iconfont icon-gerenzhongxin"></text>
         个人中心
         </button>
       <navigator>
-         <text class="iconfont icon-car-icon"></text>
+         <text class="iconfont icon-gouwu"></text>
          积分商城</navigator>
     </view>
   </view>

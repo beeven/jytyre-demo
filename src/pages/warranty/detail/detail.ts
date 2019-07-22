@@ -1,4 +1,5 @@
 import {warrantyService, ApprovalStatus } from "../warranty.service";
+import { WarrantyPageData, WarrantyPage} from '../warranty';
 
 interface WarrantyDetailPageData {
     id: string;
@@ -37,17 +38,17 @@ Page({
     },
 
     async onRemoveWarranty() {
-        wx.showToast({
-            title: '提交中',
-            icon: 'loading',
-            duration: 3000
+        wx.showLoading({
+            title: '提交中'
         });
         await warrantyService.removeWarrantyItem(this.data.id);
+        let pages = getCurrentPages();
+        console.log(pages);
+        let page = pages[pages.length-2] as unknown as WarrantyPage;
+        await page.onItemRemoved(this.data.id);
+        wx.hideLoading();
         wx.navigateBack({
             delta: 1,
-            complete: ()=>{
-                wx.hideToast();
-            }
         })
     }
 })

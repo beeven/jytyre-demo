@@ -55,5 +55,32 @@ Page({
                 })
             }
         })
+    },
+
+    onScanPlate() {
+        wx.chooseImage({
+            
+        })
     }
 })
+
+
+async function scanPlate() {
+    let imgFile = await new Promise<wx.ImageFile>((resolve,reject)=>{
+        wx.chooseImage({
+            count: 1,
+            sizeType: ['compressed'],
+            sourceType: ['album', 'camera'],
+            success: (res) => {
+                resolve(res.tempFiles[0])
+            },
+            fail: err => {
+                reject(err);
+            }
+        })
+    });
+
+    await new Promise((resolve, reject)=>{
+
+    });
+}

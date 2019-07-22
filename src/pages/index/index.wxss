@@ -93,7 +93,7 @@ page {
 }
 
 .iconfont {
-  font-size: 1.6rem;
-  margin-right: 0.3rem;
+  font-size: 1.3rem;
+  margin-right: 0.4rem;
   color: rgba(245, 32, 32, 0.5);
 }

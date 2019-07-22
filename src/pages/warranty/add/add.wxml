@@ -2,14 +2,7 @@
     <view class="fields">
         <view class="weui-cells__title">注册365质保</view>
         <view class="weui-cells weui-cells_after-title">
-            <view class="weui-cell weui-cell_input">
-                <view class="weui-cell__hd">
-                    <view class="weui-label">门店名称</view>
-                </view>
-                <view class="weui-cell__bd">
-                    <input type="text" class="weui-input" placeholder="请输入门店名称" value="{{shopName}}" />
-                </view>
-            </view>
+            
             <view class="weui-cell weui-cell_input weui-cell_vcode">
                 <view class="weui-cell__hd">
                     <view class="weui-label">门店位置</view>
@@ -18,7 +11,17 @@
                     <input type="text" class="weui-input" placeholder="请输入门店地址" value="{{shopAddress}}" />
                 </view>
                 <view class="weui-cell__ft">
-                    <view class="weui-vcode-btn" bindtap="onGetLocation">定位选择</view>
+                    <view class="weui-vcode-btn" bindtap="onGetLocation">
+                        <text class="iconfont icon-ditu"></text><text>定位选择</text>
+                    </view>
+                </view>
+            </view>
+            <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__hd">
+                    <view class="weui-label">门店名称</view>
+                </view>
+                <view class="weui-cell__bd">
+                    <input type="text" class="weui-input" placeholder="请输入门店名称" value="{{shopName}}" />
                 </view>
             </view>
             <view class="weui-cell weui-cell_input">
@@ -29,6 +32,19 @@
                     <picker mode="date" value="{{datePurchased}}" bindchange="onDateChanged">
                         <view class="weui-input">{{datePurchased}}</view>
                     </picker>
+                </view>
+            </view>
+            <view class="weui-cell weui-cell_input weui-cell_vcode">
+                <view class="weui-cell__hd">
+                    <view class="weui-label">车牌号码</view>
+                </view>
+                <view class="weui-cell__bd">
+                    <input type="text" class="weui-input" placeholder="粤A 88888"/>
+                </view>
+                <view class="weui-cell__ft">
+                    <view class="weui-vcode-btn" bindtap="onScanPlate">
+                        <text class="iconfont icon-xiangji"></text><text>拍照识别</text>
+                    </view>
                 </view>
             </view>
         </view>
