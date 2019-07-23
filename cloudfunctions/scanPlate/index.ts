@@ -1,30 +1,47 @@
 // 云函数入口文件
 //const cloud = require('wx-server-sdk');
 import * as cloud from 'wx-server-sdk';
-import { ocr } from "baidu-aip-sdk";
+import {scanPlate, scanPlateFromFile } from "./licensePlate";
 
 cloud.init()
 
-const app_id = "16802498";
-const api_key = "Gy3snWWGXxAYn7AToT1GkkUt";
-const secret_key = "idG3M6LjlgYG3822lCfehh7Gxv6DmlQc";
-
-const AipOcrClient = ocr;
 
 
 // 云函数入口函数
-exports.main = async (event, context) => {
-    const wxContext = cloud.getWXContext()
+export async function main(event, context) {
+    //const wxContext = cloud.getWXContext()
 
     console.log(event);
 
+    const fileID = event.fileID;
+    const res = await cloud.downloadFile({
+        fileID: fileID
+    });
 
+    const buffer = res.fileContent;
 
+    let ret = await scanPlate(buffer.toString("base64"));
 
-    return {
-        event,
-        openid: wxContext.OPENID,
-        appid: wxContext.APPID,
-        unionid: wxContext.UNIONID,
+    if(ret.words_result) {
+        return {
+            number: ret.words_result.number,
+            probability: ret.words_result.probability[0],
+            error_code: null,
+            error_msg: null
+        }
+    } else {
+        return {
+            error_msg: ret.error_msg,
+            error_code: ret.error_code
+        }
     }
+
+    
+
+    // return {
+    //     event,
+    //     openid: wxContext.OPENID,
+    //     appid: wxContext.APPID,
+    //     unionid: wxContext.UNIONID,
+    // }
 }

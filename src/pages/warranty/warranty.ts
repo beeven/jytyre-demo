@@ -75,9 +75,10 @@ Page<WarrantyPageData, WarrantyPage>({
 
 
 
-    addNew() {
+    async addNew() {
+        let warrantyID = await warrantyService.createWarrantyItem();
         wx.navigateTo({
-            url: './add/add?id=1'
+            url: `./add/add?id=${warrantyID}`
         })
     },
 
@@ -89,7 +90,6 @@ Page<WarrantyPageData, WarrantyPage>({
         this.setData({
             items: items
         });
-        //await warrantyService.removeWarrantyItem(id);
     }
 
 })

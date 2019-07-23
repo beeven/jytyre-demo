@@ -4,12 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "tsc": "node ./node_modules/typescript/lib/tsc.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "baidu-aip-sdk": "^2.3.9",
     "wx-server-sdk": "latest"
+  },
+  "devDependencies": {
+    "typescript": "^3.5.3"
   }
 }

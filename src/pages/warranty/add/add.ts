@@ -4,6 +4,7 @@ import {warrantyService} from '../warranty.service';
 import * as moment from "moment-mini-ts";
 
 interface AddWarrantyPageData {
+    warrantyID: string;
     shopName: string | null;
     shopAddress : string | null;
     shopLocation?: {
@@ -11,7 +12,8 @@ interface AddWarrantyPageData {
         longtitude: string
     }
     datePurchased: string;
-    
+    plateNumber: string;
+    plateImageFileID: string;
 }
 
 
@@ -23,8 +25,20 @@ Page({
 
     } as AddWarrantyPageData,
 
-    onLoad() {
+    onLoad(options) {
+        let warrantyID = options["id"];
+        this.setData({
+            warrantyID: warrantyID
+        });
+    },
 
+    async onUnload() {
+        await warrantyService.updateWarrantyItem(this.data.warrantyID, {
+            plate: this.data.plateNumber
+        },  {
+            longtitude: parseFloat(this.data.shopLocation!.longtitude),
+            latitude: parseFloat(this.data.shopLocation!.latitude)
+        });
     },
 
     onDateChanged(e: event.Input) {
@@ -57,30 +71,25 @@ Page({
         })
     },
 
-    onScanPlate() {
-        wx.chooseImage({
-            
-        })
+    async onScanPlate() {
+        let imgFile = await new Promise<wx.ImageFile>((resolve,reject)=>{
+            wx.chooseImage({
+                count: 1,
+                sizeType: ['compressed'],
+                sourceType: ['album', 'camera'],
+                success: (res) => {
+                    resolve(res.tempFiles[0])
+                },
+                fail: err => {
+                    reject(err);
+                }
+            })
+        });
+    
+        let ret = await warrantyService.uploadPlateImage(this.data.warrantyID, imgFile.path);
+        this.setData({
+            plate: ret.plateNumber,
+            plateImageFileID: ret.fileID
+        });
     }
 })
-
-
-async function scanPlate() {
-    let imgFile = await new Promise<wx.ImageFile>((resolve,reject)=>{
-        wx.chooseImage({
-            count: 1,
-            sizeType: ['compressed'],
-            sourceType: ['album', 'camera'],
-            success: (res) => {
-                resolve(res.tempFiles[0])
-            },
-            fail: err => {
-                reject(err);
-            }
-        })
-    });
-
-    await new Promise((resolve, reject)=>{
-
-    });
-}

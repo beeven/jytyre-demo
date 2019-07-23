@@ -39,6 +39,12 @@ export interface WarrantyItemDetail {
     feedback?: string;
 }
 
+export interface UploadPlateImageResult {
+    fileID: string;
+    plateNumber: string;
+    probability: number;
+}
+
 
 export class WarrantyService {
     constructor() {
@@ -86,7 +92,10 @@ export class WarrantyService {
             approvalStatus: ret.data["approvalStatus"],
             dateCreated: new Date(ret.data["dateCreated"]),
             lastUpdated: new Date(ret.data["lastUpdated"]),
-            shopLocation: ret.data["shopLocation"]
+            shopLocation: {
+                longtitude: ret.data["shopLocation"]!.cordinates[0].toString(),
+                latitude: ret.data["shopLocation"]!.coordinates[1].toString(),
+            }
         } as WarrantyItemDetail;
     }
 
@@ -94,6 +103,7 @@ export class WarrantyService {
         let ret = await this.db.collection("warranty").add({
             data: {
                 approvalStatus: ApprovalStatus.drafting,
+                plate: "未填写",
                 dateCreated: new Date(),
                 lastUpdated: new Date()
             } 
@@ -101,7 +111,14 @@ export class WarrantyService {
         return ret._id;
     }
 
-    async updateWarrantyItem(id: string) {
+    async updateWarrantyItem(id: string, update: Optional<Omit<WarrantyItemDetail,"shopLocation">>, location: {latitude: number, longtitude: number}) {
+        
+        let ret = await this.db.collection("warranty").doc(id).update({
+            data: { ...update,
+            shopLocation: this.db.Geo.Point(location.longtitude, location.latitude)
+            }
+        });
+        console.log(ret);
     }
 
     async removeWarrantyItem(id: string) {
@@ -129,6 +146,30 @@ export class WarrantyService {
             console.log(ret);
         }
         
+    }
+
+    async uploadPlateImage(warrantyID: string, localFilePath: string): Promise<UploadPlateImageResult>{
+        let ret =  await wx.cloud.uploadFile({
+                cloudPath: `/warranty/${warrantyID}/plate.jpg`,
+                filePath: localFilePath
+            });
+        let fileID = ret.fileID;
+
+        
+        let res = await wx.cloud.callFunction({
+            name: 'scanPlate',
+            data: {
+                fileID: fileID
+            }
+        });
+
+        console.log(res);
+
+        return {
+            fileID: fileID,
+            plateNumber: res.result.plateNumber,
+            probability: res.result.probability
+        }
     }
 }
 
