@@ -14,23 +14,23 @@ export enum ApprovalStatus {
 export interface WarrantyItem {
     _id: string;
     thumbnail: string;
-    plate: string;
+    plateNumber: string;
     endDate: Date,
     approvalStatus: ApprovalStatus;
 }
 
 export interface WarrantyItemDetail {
     _id: string;
-    plate?: string;
-    plateImageUrl?: string;
-    shopImageUrl?: string;
+    plateNumber?: string;
+    plateImageFileID?: string;
+    shopImageFileID?: string;
     shopName?: string;
     shopAddress?: string;
     shopLocation?: {
         latitude: string;
         longtitude: string;
     }
-    tyreImageUrls: string[];
+    tyreImageFileIDs: string[];
     datePurchased?: Date;
     endDate?: Date;
     approvalStatus: ApprovalStatus;
@@ -60,7 +60,7 @@ export class WarrantyService {
         }).field({
             _id: true,
             thumbnail: true,
-            plate: true,
+            plateNumber: true,
             endDate: true,
             approvalStatus: true
         }).get();
@@ -69,7 +69,7 @@ export class WarrantyService {
             ret.push({
                 _id: item._id!.toString(),
                 thumbnail: item["thumbnail"],
-                plate: item["plate"],
+                plateNumber: item["plateNumber"],
                 endDate: new Date(item["endDate"]),
                 approvalStatus: item["approvalStatus"]
             })
@@ -81,20 +81,20 @@ export class WarrantyService {
         let ret = await this.db.collection("warranty").doc(id).get();
         return {
             _id: ret.data._id,
-            plate: ret.data["plate"],
-            plateImageUrl: ret.data["plateImageUrl"],
+            plateNumber: ret.data["plateNumber"],
+            plateImageFileID: ret.data["plateImageFileID"],
             shopAddress: ret.data["shopAddress"],
-            shopImageUrl: ret.data["shopImageUrl"],
+            shopImageFileID: ret.data["shopImageFileID"],
             shopName: ret.data["shopName"],
-            tyreImageUrls: ret.data["tyreImageUrls"],
+            tyreImageFileIDs: ret.data["tyreImageFileIDs"],
             datePurchased: new Date(ret.data["startDate"]),
             endDate: new Date(ret.data["endDate"]),
             approvalStatus: ret.data["approvalStatus"],
             dateCreated: new Date(ret.data["dateCreated"]),
             lastUpdated: new Date(ret.data["lastUpdated"]),
             shopLocation: {
-                longtitude: ret.data["shopLocation"]!.cordinates[0].toString(),
-                latitude: ret.data["shopLocation"]!.coordinates[1].toString(),
+                longtitude: ret.data["shopLocation"] == null ? void 0 : ret.data["shopLocation"].coordinates[0].toString(),
+                latitude: ret.data["shopLocation"] == null? void 0 : ret.data["shopLocation"].coordinates[1].toString(),
             }
         } as WarrantyItemDetail;
     }
@@ -103,7 +103,7 @@ export class WarrantyService {
         let ret = await this.db.collection("warranty").add({
             data: {
                 approvalStatus: ApprovalStatus.drafting,
-                plate: "未填写",
+                plateNumber: "未填写",
                 dateCreated: new Date(),
                 lastUpdated: new Date()
             } 
@@ -111,19 +111,42 @@ export class WarrantyService {
         return ret._id;
     }
 
-    async updateWarrantyItem(id: string, update: Optional<Omit<WarrantyItemDetail,"shopLocation">>, location: {latitude: number, longtitude: number}) {
+    async updateWarrantyItem(id: string, update: Optional<Omit<WarrantyItemDetail,"shopLocation">>, location?: {latitude: number, longtitude: number}) {
         
+        let shopLocation = location ? {
+            type: 'Point',
+            ...location
+        } : undefined;
+
+        console.log(update);
+        //let o = Object.entries(update).filter(([name,value]) => !!value).map(([name,value])=>({name,value}));
+
+
         let ret = await this.db.collection("warranty").doc(id).update({
             data: { ...update,
-            shopLocation: this.db.Geo.Point(location.longtitude, location.latitude)
+            shopLocation: shopLocation
             }
         });
         console.log(ret);
     }
 
     async removeWarrantyItem(id: string) {
-        let ret = await this.db.collection("warranty").doc(id).remove();
-        console.log(ret);
+        let ret = await this.db.collection("warranty").doc(id).field({
+            _id: true,
+            plateImageFileID: true,
+            tyreImageFileIDs: true,
+            shopImageFileID: true
+        }).get();
+
+        let fileIDs: string[] = [ret.data["plateImageFileID"], ret.data["shopImageFileID"]];
+        fileIDs = fileIDs.concat(ret.data["tyreImageFileIDs"]).filter(x => !!x);
+        console.log(fileIDs);
+
+        let t1 =wx.cloud.deleteFile({
+            fileList: fileIDs
+        });
+        let t2 = this.db.collection("warranty").doc(id).remove();
+        await Promise.all([t1, t2]);
     }
 
     async samplingDatabase() {
@@ -137,7 +160,7 @@ export class WarrantyService {
             let ret = await this.db.collection("warranty").add({
                 data: {
                     thumbnail: defaultThumbnail,
-                    plate: "粤A DE"+ Math.round((Math.random() * 1000)).toString().padStart(3,'0'),
+                    plateNumber: "粤A DE"+ Math.round((Math.random() * 1000)).toString().padStart(3,'0'),
                     startDate: startDate.toDate(),
                     endDate: endDate.toDate()
                 } 
@@ -149,8 +172,15 @@ export class WarrantyService {
     }
 
     async uploadPlateImage(warrantyID: string, localFilePath: string): Promise<UploadPlateImageResult>{
+
+        let i = localFilePath.lastIndexOf(".");
+        let ext = ".jpg";
+        if(i!= -1 ) {
+            ext = localFilePath.substr(i);
+        }
+
         let ret =  await wx.cloud.uploadFile({
-                cloudPath: `/warranty/${warrantyID}/plate.jpg`,
+                cloudPath: `warranty/licensePlates/${warrantyID}${ext}`,
                 filePath: localFilePath
             });
         let fileID = ret.fileID;
@@ -165,9 +195,13 @@ export class WarrantyService {
 
         console.log(res);
 
+        if (res.result.error_msg) {
+            throw new Error(res.result.error_msg);
+        }
+
         return {
             fileID: fileID,
-            plateNumber: res.result.plateNumber,
+            plateNumber: res.result.number,
             probability: res.result.probability
         }
     }

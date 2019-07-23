@@ -10,18 +10,13 @@ cloud.init()
 // 云函数入口函数
 export async function main(event, context) {
     //const wxContext = cloud.getWXContext()
-
-    console.log(event);
-
     const fileID = event.fileID;
     const res = await cloud.downloadFile({
         fileID: fileID
     });
-
     const buffer = res.fileContent;
-
-    let ret = await scanPlate(buffer.toString("base64"));
-
+    let imgData = buffer.toString("base64");
+    let ret = await scanPlate(imgData);
     if(ret.words_result) {
         return {
             number: ret.words_result.number,

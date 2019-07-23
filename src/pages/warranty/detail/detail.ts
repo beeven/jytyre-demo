@@ -26,11 +26,11 @@ Page({
 
         this.setData({
             id: ret._id,
-            plate: ret.plate || "",
-            plateImageUrl: ret.plateImageUrl || "",
-            shopImageUrl: ret.shopImageUrl || "",
+            plateNumber: ret.plateNumber || "",
+            plateImageUrl: ret.plateImageFileID || "",
+            shopImageUrl: ret.shopImageFileID || "",
             shopAddress: ret.shopAddress || "",
-            tyreImageUrls: ret.tyreImageUrls || [],
+            tyreImageUrls: ret.tyreImageFileIDs || [],
             datePurchased: ret.datePurchased!.toString() || "",
             endDate: ret.endDate!.toDateString() || "",
             approvalStatus: ret.approvalStatus || ApprovalStatus.drafting

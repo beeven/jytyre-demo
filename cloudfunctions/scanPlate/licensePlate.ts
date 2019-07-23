@@ -29,10 +29,7 @@ interface LicensePlateResult {
 }
 
 export function scanPlate(imageData: string, multiple: boolean = false): Promise<LicensePlateResult> {
-    return aipClient.licensePlate({
-        image: imageData,
-        multi_detect: multiple.toString()
-    })
+    return aipClient.licensePlate(imageData,multiple.toString());
 }
 
 export function scanPlateFromFile(path) {

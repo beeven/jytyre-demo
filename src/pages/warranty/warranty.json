@@ -1,4 +1,5 @@
 {
     "navigationBarTitleText": "365质保",
-    "usingComponents": {}
+    "usingComponents": {},
+    "enablePullDownRefresh": true
   }

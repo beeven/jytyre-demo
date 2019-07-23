@@ -12,7 +12,7 @@
                             <image class="weui-media-box__thumb" src="{{item.thumbnail}}" />
                         </view>
                         <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-                            <text class="weui-media-box_title">{{item.plate}}</text>
+                            <text class="weui-media-box_title">{{item.plateNumber}}</text>
                             <text class="weui-media-box__desc">{{item.description}}</text>
                         </view>
                         <view class="weui-cell__ft weui-cell__ft_in-access"></view>

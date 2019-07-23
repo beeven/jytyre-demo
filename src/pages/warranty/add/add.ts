@@ -14,6 +14,7 @@ interface AddWarrantyPageData {
     datePurchased: string;
     plateNumber: string;
     plateImageFileID: string;
+    plateImageFilePath: string;
 }
 
 
@@ -33,12 +34,13 @@ Page({
     },
 
     async onUnload() {
+        console.log(this.data);
         await warrantyService.updateWarrantyItem(this.data.warrantyID, {
-            plate: this.data.plateNumber
-        },  {
+            plateNumber: this.data.plateNumber
+        }, this.data.shopLocation ?  {
             longtitude: parseFloat(this.data.shopLocation!.longtitude),
             latitude: parseFloat(this.data.shopLocation!.latitude)
-        });
+        }: undefined);
     },
 
     onDateChanged(e: event.Input) {
@@ -72,6 +74,7 @@ Page({
     },
 
     async onScanPlate() {
+        
         let imgFile = await new Promise<wx.ImageFile>((resolve,reject)=>{
             wx.chooseImage({
                 count: 1,
@@ -85,11 +88,35 @@ Page({
                 }
             })
         });
-    
-        let ret = await warrantyService.uploadPlateImage(this.data.warrantyID, imgFile.path);
+
+        console.log(imgFile.size);
+
         this.setData({
-            plate: ret.plateNumber,
-            plateImageFileID: ret.fileID
-        });
+            plateImageFileID: "123",
+            plateImageFilePath: imgFile.path
+        })
+
+    
+        try {
+            wx.showLoading({
+                title: '数据上传中',
+                mask: true
+            });
+            let ret = await warrantyService.uploadPlateImage(this.data.warrantyID, imgFile.path);
+            wx.hideLoading();
+            this.setData({
+                plateNumber: ret.plateNumber,
+                plateImageFileID: ret.fileID
+            });
+        } catch(err) {
+            wx.hideLoading();
+            wx.showModal({
+                title: '提示',
+                content: '照片识别失败，请按照要求重新上传',
+                showCancel: false
+            });   
+        } 
+
+
     }
 })
