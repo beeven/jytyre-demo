@@ -1,15 +1,16 @@
 
-import {warrantyService} from '../warranty.service';
+import {warrantyService, ApprovalStatus} from '../warranty.service';
 
 import * as moment from "moment-mini-ts";
+import { WarrantyPage } from '../warranty';
 
 interface AddWarrantyPageData {
     warrantyID: string;
     shopName: string | null;
     shopAddress : string | null;
     shopLocation?: {
-        latitude: string,
-        longtitude: string
+        longtitude: number,
+        latitude: number
     }
     datePurchased: string;
     plateNumber: string;
@@ -34,12 +35,25 @@ Page({
     },
 
     async onUnload() {
+        
+        let pages = getCurrentPages();
+        console.log(pages);
+        let page = pages[pages.length-2] as unknown as WarrantyPage;
+        await page.onItemAdded(this.data.warrantyID, {
+            plateNumber: this.data.plateNumber,
+            id: this.data.warrantyID,
+            approvalStatus: ApprovalStatus.drafting,
+            description: '',
+            thumbnail: ""
+        });
+
+
         console.log(this.data);
         await warrantyService.updateWarrantyItem(this.data.warrantyID, {
             plateNumber: this.data.plateNumber
         }, this.data.shopLocation ?  {
-            longtitude: parseFloat(this.data.shopLocation!.longtitude),
-            latitude: parseFloat(this.data.shopLocation!.latitude)
+            longtitude:+this.data.shopLocation!.longtitude,
+            latitude:+this.data.shopLocation!.latitude
         }: undefined);
     },
 
@@ -56,8 +70,8 @@ Page({
                 this.setData({
                     shopAddress: res.address,
                     shopLocation: {
-                        latitude: res.latitude,
-                        longtitude: res.longitude
+                        latitude: +res.latitude,
+                        longtitude: +res.longitude
                     },
                     shopName: res.name
                 });

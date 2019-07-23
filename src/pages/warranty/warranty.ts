@@ -24,6 +24,7 @@ export interface WarrantyPage {
     addNew(): void;
     onItemRemoved(id: string): void;
     reloadList(): void;
+    onItemAdded(id: string, item: WarrantyListItem): void;
 }
 
 Page<WarrantyPageData, WarrantyPage>({
@@ -64,6 +65,14 @@ Page<WarrantyPageData, WarrantyPage>({
         let items = this.data.items;
         let i = items.findIndex(x => x.id == id);
         items.splice(i,1);
+        this.setData({
+            items: items
+        });
+    },
+
+    async onItemAdded(id: string, item: WarrantyListItem) {
+        let items = this.data.items;
+        items.push(item)
         this.setData({
             items: items
         });

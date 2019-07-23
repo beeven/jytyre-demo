@@ -79,8 +79,8 @@ export class WarrantyService {
 
     async getWarrantyItemDetail(id: string) {
         let ret = await this.db.collection("warranty").doc(id).get();
-        return {
-            _id: ret.data._id,
+        let detail: WarrantyItemDetail =  {
+            _id: ret.data._id as string,
             plateNumber: ret.data["plateNumber"],
             plateImageFileID: ret.data["plateImageFileID"],
             shopAddress: ret.data["shopAddress"],
@@ -91,12 +91,19 @@ export class WarrantyService {
             endDate: new Date(ret.data["endDate"]),
             approvalStatus: ret.data["approvalStatus"],
             dateCreated: new Date(ret.data["dateCreated"]),
-            lastUpdated: new Date(ret.data["lastUpdated"]),
-            shopLocation: {
-                longtitude: ret.data["shopLocation"] == null ? void 0 : ret.data["shopLocation"].coordinates[0].toString(),
-                latitude: ret.data["shopLocation"] == null? void 0 : ret.data["shopLocation"].coordinates[1].toString(),
+            lastUpdated: new Date(ret.data["lastUpdated"])
+        }  
+
+        let shopLocation = ret.data["shopLocation"]
+        console.log(shopLocation);
+        if(shopLocation != null && typeof shopLocation !== 'undefined' && shopLocation.coordinates) {
+            
+            detail["shopLocation"] = {
+                longtitude:  ret.data["shopLocation"].coordinates[0].toString(),
+                latitude:  ret.data["shopLocation"].coordinates[1].toString(),
             }
-        } as WarrantyItemDetail;
+        }
+        return detail;
     }
 
     async createWarrantyItem() {
@@ -119,8 +126,11 @@ export class WarrantyService {
         } : undefined;
 
         console.log(update);
-        //let o = Object.entries(update).filter(([name,value]) => !!value).map(([name,value])=>({name,value}));
+        let o = Object.entries(update).filter(([name,value]) => !!value);
 
+        if(o.length == 0 && typeof shopLocation === 'undefined' ) {
+            return;
+        } 
 
         let ret = await this.db.collection("warranty").doc(id).update({
             data: { ...update,
