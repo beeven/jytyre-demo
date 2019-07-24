@@ -21,7 +21,7 @@
             </view>
         </view>
         <view class="add-button">
-            <button bindtap="addNew" class="weui-btn" type="primary" >注册365质保</button>
+            <button bindtap="addNew" class="weui-btn" type="primary" hover-class="add-button-hover" >注册365质保</button>
         </view>
     </view>
 </view>

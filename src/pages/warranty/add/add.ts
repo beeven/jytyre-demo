@@ -40,7 +40,7 @@ Page({
         console.log(pages);
         let page = pages[pages.length-2] as unknown as WarrantyPage;
         await page.onItemAdded(this.data.warrantyID, {
-            plateNumber: this.data.plateNumber,
+            plateNumber: this.data.plateNumber || '车牌未填写',
             id: this.data.warrantyID,
             approvalStatus: ApprovalStatus.drafting,
             description: '',

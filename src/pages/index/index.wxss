@@ -80,12 +80,12 @@ page {
 }
 
 .row:first-of-type {
-  border-bottom: 3rpx solid rgba(234,30,99, 0.3);
+  border-bottom: 3rpx solid rgba(234,30,99, 0.5);
 }
 
 .row button:first-child,
 .row navigator:first-child {
-  border-right: 3rpx solid rgba(234,30,99,0.3);
+  border-right: 3rpx solid rgba(234,30,99,0.5);
 }
 
 .row text {
@@ -95,5 +95,5 @@ page {
 .iconfont {
   font-size: 1.3rem;
   margin-right: 0.4rem;
-  color: rgba(245, 32, 32, 0.5);
+  color: rgba(245, 32, 32, 0.7);
 }

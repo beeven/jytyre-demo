@@ -1,13 +1,57 @@
+page {
+    height: 100%;
+    background: #333333;
+    color: white;
+}
+
+
+
 .warranty-items {
     width: 100%;
 }
 
+.weui-panel {
+    background: #333333;
+    border: none;
+}
+
+.weui-panel::before,
+.weui-panel::after {
+    border:none;
+}
+
+.weui-panel__hd {
+    background: #222222;
+}
+.weui-panel__hd::after {
+    border:none;
+}
+
+.weui-panel__bd {
+    background: #333333;
+    border: none;
+}
+
+
 navigator.weui-media-box {
-    border-bottom: 1rpx solid #dedede;
+    /* border-bottom: 1rpx solid #dedede; */
+    margin: 40rpx;
+    background: #444444;
 }
 
 .add-button {
     margin-top: 50rpx;
     padding-left: 40rpx;
     padding-right: 40rpx;
+    margin-bottom: 50rpx;
+}
+
+.add-button button {
+    border-radius: 100rpx;
+    background: rgba(182, 25, 25, 0.8);
+}
+
+.add-button-hover {
+    background: rgb(88, 13, 13);
+    color: #dedede;
 }
