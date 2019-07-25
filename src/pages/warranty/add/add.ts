@@ -132,5 +132,32 @@ Page({
         } 
 
 
+    },
+
+    previewImage(e: event.Touch) {
+        console.log(e);
+        let name = e.currentTarget.dataset["name"];
+        console.log(e.currentTarget);
+        let url;
+        switch(name) {
+            case "shop":
+                url = "../../../assets/shopFront.jpg";
+                break;
+            case "tyre-model":
+                url = "../../../assets/tyre-model.jpg";
+                break;
+            case "tyre-installation":
+                url = "../../../assets/tyre-installation.jpg"
+                break;
+        }
+        wx.previewImage({
+            urls:[url],
+            current: url
+        });
+
+    },
+
+    chooseImage(e:event.Touch) {
+        console.log(e);
     }
 })

@@ -4,6 +4,10 @@
     padding-right: 40rpx;
 }
 
+.pull-right>view {
+    float:right;
+}
+
 
 .input-plate-image {
     line-height: 130rpx;
