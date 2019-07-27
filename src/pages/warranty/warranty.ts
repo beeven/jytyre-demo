@@ -1,19 +1,13 @@
 import { IMyApp } from "../../app";
 import * as moment from "moment-mini-ts";
 import { warrantyService, ApprovalStatus } from './warranty.service';
+import { WarrantyListItem } from "./warrantListItem";
 
 const app = getApp<IMyApp>();
 
 
 
-export interface WarrantyListItem {
-    id: string;
-    plateNumber: string;
-    description: string;
-    thumbnail: string;
-    approvalStatus: ApprovalStatus;
-    isDeleting: boolean;
-}
+
 
 export interface WarrantyPageData {
     items: WarrantyListItem[],
@@ -60,7 +54,7 @@ Page<WarrantyPageData, WarrantyPage>({
 
     async UpdateItem(id: string, item: WarrantyListItem) {
         let items = this.data.items;
-        let i = items.findIndex(x => x.id === id);
+        let i = items.findIndex(x => x.warrantyID === id);
         if (item.isDeleting) {
             if (i != -1) {
                 items.splice(i, 1)
@@ -95,16 +89,17 @@ Page<WarrantyPageData, WarrantyPage>({
 
         let viewItems: WarrantyListItem[] = [];
         warrantyItems.forEach(item => {
-            viewItems.push({
-                id: item._id,
-                plateNumber: item.plateNumber ? item.plateNumber : '车牌未填写',
-                thumbnail: item.thumbnail,
-                description: item.endDate ? `质保期限： ${moment(item.endDate).format("YYYY-MM-DD")}` : "",
-                approvalStatus: item.approvalStatus,
-                isDeleting: false
-            });
+            let i = new WarrantyListItem(
+                item._id,
+                item.plateNumber ? item.plateNumber : '车牌未填写',
+                item.endDate ? `质保期限： ${moment(item.endDate).format("YYYY-MM-DD")}` : "",
+                item.thumbnail,
+                item.approvalStatus
+            );
+
+            viewItems.push(i);
         })
-        console.log(warrantyItems);
+        console.log(viewItems);
 
         wx.hideToast();
         this.setData({

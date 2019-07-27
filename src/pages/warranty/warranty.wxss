@@ -13,7 +13,7 @@ page {
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: spin 1s linear infinite;
+    animation: spin 4s linear infinite;
     transform-origin: 50% 50%;
 } 
 
@@ -57,6 +57,22 @@ navigator.weui-media-box {
     /* border-bottom: 1rpx solid #dedede; */
     margin: 40rpx;
     background: #444444;
+    position: relative;
+}
+
+.status-text {
+    font-size: 0.8rem;
+}
+
+.status-icon {
+    position: absolute;
+    top:-50rpx;
+    right:-20rpx;
+}
+
+.status-icon .iconfont {
+    font-size: 2rem;
+    color: #83ec20;
 }
 
 .add-button {
@@ -69,9 +85,11 @@ navigator.weui-media-box {
 .add-button button {
     border-radius: 100rpx;
     background: rgba(182, 25, 25, 0.8);
+    color: white;
 }
 
-.add-button-hover {
+button.add-button-hover {
     background: rgb(88, 13, 13);
-    color: #dedede;
+    color: #999999;
 }
+

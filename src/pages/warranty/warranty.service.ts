@@ -21,6 +21,7 @@ export interface WarrantyItem {
 
 export interface WarrantyItemDetail {
     _id: string;
+    thumbnail: string;
     plateNumber?: string;
     plateImageFileID?: string;
     shopImageFileID?: string;
@@ -49,7 +50,7 @@ export interface UploadPlateImageResult {
 
 export class WarrantyService {
     constructor() {
-        
+        console.log("constructing WarrantyService")
     }
 
     private db = wx.cloud.database();
@@ -80,10 +81,10 @@ export class WarrantyService {
 
     async getWarrantyItemDetail(id: string) {
         let ret = await this.db.collection("warranty").doc(id).get();
-        console.log(new Date());
         
         let detail: WarrantyItemDetail =  {
             _id: ret.data._id as string,
+            thumbnail: ret.data["thumbnail"],
             plateNumber: ret.data["plateNumber"],
             plateImageFileID: ret.data["plateImageFileID"],
             shopAddress: ret.data["shopAddress"],
@@ -108,7 +109,7 @@ export class WarrantyService {
                 latitude:  ret.data["shopLocation"].coordinates[1].toString(),
             }
         }
-        console.log(detail);
+        
         return detail;
     }
 
@@ -125,6 +126,7 @@ export class WarrantyService {
 
     async updateWarrantyItem(id: string, update: Optional<Omit<WarrantyItemDetail,"shopLocation">>, location?: {latitude: number, longtitude: number}) {
         
+
         let shopLocation = location ? {
             type: 'Point',
             ...location
@@ -143,7 +145,6 @@ export class WarrantyService {
             shopLocation: shopLocation
             }
         });
-        console.log(ret);
     }
 
     async removeWarrantyItem(id: string) {
@@ -240,6 +241,12 @@ export class WarrantyService {
         let ret =  await wx.cloud.uploadFile({
             cloudPath: `warranty/${warrantyID}/${name}${ext}`,
             filePath: localFilePath
+        });
+
+        await this.db.collection("warranty").doc(warrantyID).update({
+            data: {
+                [name+"ImageFileID"]: ret.fileID
+            }
         });
 
         return ret.fileID;

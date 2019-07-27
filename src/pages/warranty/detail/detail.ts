@@ -3,9 +3,11 @@ import { warrantyService, ApprovalStatus } from '../warranty.service';
 
 import * as moment from "moment-mini-ts";
 import { WarrantyPage } from '../warranty';
+import { WarrantyListItem } from '../warrantListItem';
 
 interface WarrantyDetailPageData {
     warrantyID: string;
+    thumbnail: string;
     shopName: string;
     shopImageFileID: string;
     shopImageFileUrl: string;
@@ -15,6 +17,8 @@ interface WarrantyDetailPageData {
         latitude: number
     }
     datePurchased: string;
+    endDate: string;
+    approvalStatus: ApprovalStatus;
     plateNumber: string;
     plateImageFileID: string;
     plateImageFileUrl: string;
@@ -30,7 +34,8 @@ interface WarrantyDetailPageData {
 
 Page({
     data: {
-
+        viewMode: true,
+        canDelete: false
     } as WarrantyDetailPageData,
 
     async onLoad(options) {
@@ -38,10 +43,9 @@ Page({
 
         let ret = await warrantyService.getWarrantyItemDetail(warrantyID);
 
-        console.log(ret);
-
-        this.setData({
+        let viewData = {
             warrantyID: warrantyID,
+            thumbnail: ret.thumbnail || "",
             plateNumber: ret.plateNumber || "",
             plateImageFileID: ret.plateImageFileID || "",
             shopName: ret.shopName || "",
@@ -54,11 +58,16 @@ Page({
             approvalStatus: ret.approvalStatus || ApprovalStatus.drafting,
             viewMode: ret.approvalStatus == ApprovalStatus.pending || ret.approvalStatus == ApprovalStatus.approved,
             canDelete: ret.approvalStatus == ApprovalStatus.drafting,
-            shopLocation: ret.shopLocation ? {
+        }
+
+        if (ret.shopLocation) {
+            viewData["shopLocation"] = {
                 longtitude: ret.shopLocation!.longtitude,
                 latitude: ret.shopLocation!.latitude
-            } : undefined
-        });
+            }
+        }
+
+        this.setData(viewData);
 
         let fileIDs = [{ name: "plateImageFileID", value: this.data.plateImageFileID },
         { name: "shopImageFileID", value: this.data.shopImageFileID },
@@ -80,6 +89,13 @@ Page({
             });
             this.setData({ ...updates });
         }
+
+        if(this.data.thumbnail) {
+            const ctx = wx.createCanvasContext("cropCanvas");
+            ctx.drawImage(this.data.thumbnail, 0,0);
+            ctx.draw();
+            // this.data["cropCanvasContext"] = ctx;
+        }
     },
 
     async onUnload() {
@@ -87,14 +103,10 @@ Page({
 
         let pages = getCurrentPages();
         let page = pages[pages.length - 2] as unknown as WarrantyPage;
-        await page.UpdateItem(this.data.warrantyID, {
-            plateNumber: this.data.plateNumber || '车牌未填写',
-            id: this.data.warrantyID,
-            approvalStatus: ApprovalStatus.drafting,
-            description: '',
-            thumbnail: "",
-            isDeleting: this.data.isDeleting
-        });
+
+
+        let item = new WarrantyListItem(this.data.warrantyID, this.data.plateNumber || '车牌未填写', '', this.data.thumbnail, this.data.approvalStatus, this.data.isDeleting);
+        await page.UpdateItem(this.data.warrantyID, item);
 
         if (!this.data.isDeleting) {
             await warrantyService.updateWarrantyItem(this.data.warrantyID, {
@@ -105,7 +117,9 @@ Page({
                 shopImageFileID: this.data.shopImageFileID,
                 shopName: this.data.shopName,
                 tyreModelImageFileID: this.data.tyreModelImageFileID,
-                tyreInstallationImageFileID: this.data.tyreInstallationImageFileID
+                tyreInstallationImageFileID: this.data.tyreInstallationImageFileID,
+                approvalStatus: this.data.approvalStatus,
+                thumbnail: this.data.thumbnail
             }, this.data.shopLocation ? {
                 longtitude: this.data.shopLocation!.longtitude,
                 latitude: this.data.shopLocation!.latitude
@@ -122,11 +136,12 @@ Page({
     onGetLocation() {
         wx.chooseLocation({
             success: res => {
+                console.log(res);
                 this.setData({
                     shopAddress: res.address,
                     shopLocation: {
-                        latitude: +res.latitude,
-                        longtitude: +res.longitude
+                        latitude: res.latitude,
+                        longtitude: res.longitude
                     },
                     shopName: res.name
                 });
@@ -143,11 +158,17 @@ Page({
     },
 
     async onScanPlate() {
+        if (this.data.viewMode) {
+            wx.previewImage({
+                urls: [this.data.plateImageFileUrl]
+            });
+            return;
+        }
 
-        let imgFile;
+        let imgFileUrl: string;
 
         try {
-            imgFile = await new Promise<wx.ImageFile>((resolve, reject) => {
+            let imgFile = await new Promise<wx.ImageFile>((resolve, reject) => {
                 wx.chooseImage({
                     count: 1,
                     sizeType: ['compressed'],
@@ -160,33 +181,40 @@ Page({
                     }
                 })
             });
+            imgFileUrl = imgFile.path;
             this.setData({
-                plateImageFileUrl: imgFile.path
+                plateImageFileUrl: imgFileUrl
             })
         } catch (err) {
+            console.log(err);
             return;
         }
 
-
-
-
+        
         try {
             wx.showLoading({ title: "图片上传中", mask: true });
-            let fileID = await warrantyService.uploadImage(this.data.warrantyID, imgFile.path, "licensePlate");
+            let fileID = await warrantyService.uploadImage(this.data.warrantyID, imgFileUrl, "licensePlate");
             //wx.hideLoading();
-
+            this.setData({
+                plateImageFileID: fileID
+            })
             wx.showLoading({ title: "识别车牌中" })
+            console.log(fileID);
             let ret = await warrantyService.getPlateNumber(fileID);
             wx.hideLoading();
             this.setData({
-                plateNumber: ret.plateNumber,
-                plateImageFileID: ret.fileID
-            })
+                plateNumber: ret.plateNumber
+            });
+
+            let thumbnailData = await this.getThumbnail(imgFileUrl);
+            this.setData({
+                thumbnail: thumbnailData
+            });
         } catch (err) {
             wx.hideLoading();
             wx.showModal({
                 title: '提示',
-                content: '照片识别失败，请按照要求重新上传',
+                content: '照片识别失败，请重新上传，或手动填入车牌',
                 showCancel: false
             });
         }
@@ -202,26 +230,43 @@ Page({
 
 
     async chooseImage(e: event.Touch) {
-        let imageName = e.currentTarget.dataset["name"];
-        let imageFile = await new Promise<wx.ImageFile>((resolve, reject) => {
-            wx.chooseImage({
-                sizeType: ['original'],
-                success: res => {
-                    resolve(res.tempFiles[0])
-                },
-                fail: err => {
-                    reject(err);
-                }
+        if (this.data.viewMode) {
+            let name = e.currentTarget.dataset["name"];
+            wx.previewImage({
+                urls: [this.data[name + "ImageFileUrl"]],
             })
-        });
+            return;
+        }
 
-        let fileID = await warrantyService.uploadImage(this.data.warrantyID, imageFile.path, imageName);
+        let imageName = e.currentTarget.dataset["name"];
+        let imageFilePath: string;
+        try {
+            let imageFile = await new Promise<wx.ImageFile>((resolve, reject) => {
+                wx.chooseImage({
+                    sizeType: ['original'],
+                    success: res => {
+                        resolve(res.tempFiles[0])
+                    },
+                    fail: err => {
+                        reject(err);
+                    }
+                });
+            });
+            imageFilePath = imageFile.path;
+        } catch (err) {
+            return;
+        }
+
+        wx.showLoading({ "mask": true, "title": "图片上传中" })
+
+        let fileID = await warrantyService.uploadImage(this.data.warrantyID, imageFilePath, imageName);
         let fileIDProperty = imageName + "ImageFileID";
         let fileUrlProperty = imageName + "ImageFileUrl";
         this.setData({
             [fileIDProperty]: fileID,
-            [fileUrlProperty]: imageFile.path
+            [fileUrlProperty]: imageFilePath
         });
+        wx.hideLoading();
     },
 
     async onRemoveWarranty() {
@@ -247,5 +292,93 @@ Page({
         wx.previewImage({
             urls: [this.data[name + "ImageFileUrl"]]
         })
+    },
+
+    onSubmit(e: event.Touch) {
+        if (!this.data.shopAddress) {
+            wx.showModal({ title: "提示", content: "门店地址还没有填写哦！", showCancel: false });
+            return;
+        }
+
+        if (!this.data.shopName) {
+            wx.showModal({ title: "提示", content: "门店名称还没有填写哦！", showCancel: false });
+            return;
+        }
+
+        if (!this.data.shopImageFileID) {
+            wx.showModal({ title: "提示", content: "门店照片还没有上传哦！", showCancel: false });
+            return;
+        }
+
+        if (!this.data.plateNumber) {
+            wx.showModal({ title: "提示", content: "车牌号码还没有填写哦！", showCancel: false });
+            return;
+        }
+
+        if (!this.data.tyreModelImageFileID) {
+            wx.showModal({ title: "提示", content: "轮胎型号照片还没有上传哦！", showCancel: false });
+            return;
+        }
+
+        if (!this.data.tyreInstallationImageFileID) {
+            wx.showModal({ title: "提示", content: "轮胎安装照片还没有上传哦！", showCancel: false });
+            return;
+        }
+
+        wx.showModal({
+            title: '提示',
+            content: '提交后将进入审核环节，无法修改，请确认资料是否填写无误',
+            confirmText: '提交',
+            cancelText: '返回',
+            success: res => {
+                if (res.confirm) {
+                    this.setData({
+                        approvalStatus: ApprovalStatus.pending,
+                        canDelete: false,
+                        viewMode: true,
+                    });
+                    wx.navigateBack({
+                        delta: 1
+                    });
+                }
+            }
+        })
+    },
+
+    async getThumbnail(imageUrl: string):Promise<string> {
+        const ctx = wx.createCanvasContext('cropCanvas');
+        ctx.drawImage(imageUrl, 0, 0, 50, 50);
+        await new Promise((resolve,reject)=> ctx.draw(false, resolve));
+
+        let path: string = await new Promise((resolve, reject) => {
+            wx.canvasToTempFilePath({
+                x: 0,
+                y: 0,
+                width: 50,
+                height: 50,
+                canvasId: 'cropCanvas',
+                fileType: "jpg",
+                quality: 1,
+                success: res => {
+                    resolve(res.tempFilePath);
+                },
+                fail: err => {
+                    console.error(err);
+                    reject(err);
+                }
+            })
+        });
+        let manager = wx.getFileSystemManager();
+        let data:string = await new Promise((resolve,reject)=>{ manager.readFile({
+            filePath: path,
+            encoding: 'base64',
+            success: res => {
+                resolve(res.data as string);
+            },
+            fail: err => {
+                reject(err);
+            }
+        })});
+        return "data:image/jpeg;base64,"+data;
     }
 })

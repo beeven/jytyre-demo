@@ -11,8 +11,8 @@
                         <text>您尚未有注册365质保</text>
                     </view>
                 </view>
-                <view wx:for="{{items}}" wx:key="id">
-                    <navigator class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" url="./detail/detail?id={{item.id}}" open-type="navigate">
+                <view wx:for="{{items}}" wx:key="warrantyID">
+                    <navigator class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" url="./detail/detail?id={{item.warrantyID}}" open-type="navigate">
                         <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
                             <image class="weui-media-box__thumb" src="{{item.thumbnail}}" />
                         </view>
@@ -20,13 +20,18 @@
                             <text class="weui-media-box_title">{{item.plateNumber}}</text>
                             <text class="weui-media-box__desc">{{item.description}}</text>
                         </view>
-                        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+                        <view class="weui-cell__ft weui-cell__ft_in-access">
+                            <text class="status-text">{{item.status}}</text>
+                        </view>
+                        <view class="status-icon">
+                            <text class="iconfont {{item.statusIconClass}}"></text>
+                        </view>
                     </navigator>
                 </view>
             </view>
         </view>
         <view class="add-button">
-            <button bindtap="addNew" class="weui-btn" type="primary" hover-class="add-button-hover">
+            <button bindtap="addNew" class="weui-btn" hover-class="add-button-hover">
                 注册365质保
             </button>
         </view>

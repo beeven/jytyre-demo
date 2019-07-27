@@ -3,7 +3,7 @@
     "strictNullChecks": true,
     "noImplicitAny": false,
     "module": "CommonJS",
-    "target": "ES2017",
+    "target": "ES2015",
     "allowJs": true,
     "experimentalDecorators": true,
     "noImplicitThis": true,

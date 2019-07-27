@@ -5,7 +5,7 @@ page {
 
 .weui-cells {
     background: #333333;
-    margin: 10rpx 40rpx;
+    margin: 50rpx 40rpx;
 }
 
 .weui-cells::after {
@@ -20,15 +20,21 @@ page {
     background: #444444;
 }
 
-.shop-address {
-    padding: 10rpx 0;
+.weui-cell__hd {
+    display: flex;
+    flex-direction: row;
+    width: 105px;
 }
 
-.fields {
-    width: 100%;
-    padding-left: 40rpx;
-    padding-right: 40rpx;
+.weui-cell__hd .iconfont {
+    font-size: 2rem;
 }
+
+.shop-address,
+.shop-name {
+    padding: 10rpx 10rpx 10rpx 0;
+}
+
 
 .pull-right>view {
     float:right;
@@ -80,3 +86,10 @@ page {
     background: rgba(182, 25, 25, 0.3);
 }
 
+.delete-button {
+    display: block;
+    margin: 20rpx 40rpx;
+    border-radius: 100rpx;
+    color: white;
+    background: #d38d31;
+}
