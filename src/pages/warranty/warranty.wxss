@@ -4,7 +4,27 @@ page {
     color: white;
 }
 
+.hint {
+    margin-top: 50rpx;
+    text-align: center;
+}
 
+ .hint .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: spin 1s linear infinite;
+    transform-origin: 50% 50%;
+} 
+
+.hint .iconfont {
+    font-size: 3rem;
+    
+}
+
+@keyframes spin {
+    100% {transform:rotate(360deg)}
+}
 
 .warranty-items {
     width: 100%;

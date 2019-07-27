@@ -1,5 +1,116 @@
-<view>
-    <view>
-        <button class="weui-btn" type="warn" bindtap="onRemoveWarranty">撤销此条申请</button>
+<view class="container">
+    <view class="fields">
+        <!-- <view class="weui-cells__title">注册365质保</view> -->
+        <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_input weui-cell_vcode">
+                <view class="weui-cell__hd">
+                    <view class="weui-label">门店位置</view>
+                </view>
+                <view class="weui-cell__bd">
+                    <view class="shop-address" wx:if="{{viewMode}}">{{shopAddress}}</view>
+                    <input type="text" class="weui-input" placeholder="请输入门店地址" value="{{shopAddress}}" wx:else />
+                </view>
+                <view class="weui-cell__ft" wx:if="{{!viewMode}}">
+                    <view class="weui-vcode-btn" bindtap="onGetLocation">
+                        <text class="iconfont icon-ditu"></text>
+                        <text>定位选择</text>
+                    </view>
+                </view>
+            </view>
+            <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__hd">
+                    <view class="weui-label">门店名称</view>
+                </view>
+                <view class="weui-cell__bd">
+                    <view type="text" class="weui-input" wx:if="{{viewMode}}">{{shopName}}</view>
+                    <input type="text" class="weui-input" placeholder="请输入门店名称" value="{{shopName}}" wx:else />
+                </view>
+            </view>
+            <view class="weui-cell">
+                <view class="weui-cell__hd">
+                    <view class="weui-label">门店照片</view>
+                </view>
+                <view class="weui-cell__bd">
+                    <view class="weui-uploader pull-right">
+                        <view class="weui-uploader__input-box" wx:if="{{!shopImageFileID}}">
+                            <view class="weui-uploader__input" bindtap="chooseImage" data-name="shop"></view>
+                        </view>
+                        <view class="weui-uploader__file weui-uploader__file_status" bindtap="chooseImage" mode="aspectFit" data-name="shop" wx:else>
+                            <image class="weui-uploader__img" src="{{shopImageFileUrl}}" />
+                            <!-- <view class="weui-uploader__file-content">示例</view> -->
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__hd">
+                    <view class="weui-label">购买日期</view>
+                </view>
+                <view class="weui-cell__bd">
+                    <view class="weui-input" wx:if="{{viewMode}}">{{datePurchased}}</view>
+                    <picker mode="date" value="{{datePurchased}}" bindchange="onDateChanged" wx:else>
+                        <view class="weui-input">{{datePurchased}}</view>
+                    </picker>
+                </view>
+            </view>
+            <view class="weui-cell weui-cell_input   input-plate-image">
+                <view class="weui-cell__hd">
+                    <view class="weui-label">车牌照片</view>
+                </view>
+                <view class="weui-cell__bd">
+                    <input type="text" class="weui-input" placeholder="上传照片识别" value="{{plateNumber}}" bindblur="onPlateInput" />
+                </view>
+                <view class="weui-cell__ft">
+                    <view class="weui-uploader">
+                        <view class="weui-uploader__input-box" wx:if="{{!plateImageFileID}}">
+                            <view class="weui-uploader__input" bindtap="onScanPlate"></view>
+                        </view>
+                        <view class="weui-uploader__file" wx:else>
+                            <image class="weui-uploader__img" src="{{plateImageFileUrl}}" mode="aspectFit" bindtap="onScanPlate" />
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="weui-cell">
+                <view class="weui-cell__hd">
+                    <view class="weui-label">轮胎规格照片</view>
+                </view>
+                <view class="weui-cell__bd">
+                    <view class="weui-uploader  pull-right">
+                        <view class="weui-uploader__input-box" wx:if="{{!tyreModelImageFileID}}">
+                            <view class="weui-uploader__input" bindtap="chooseImage" data-name="tyreModel"></view>
+                        </view>
+                        <view class="weui-uploader__file weui-uploader__file_status" bindtap="chooseImage" mode="aspectFit" data-name="tyreModel" wx:else>
+                            <image class="weui-uploader__img" src="{{tyreModelImageFileUrl}}" />
+                            <!-- <view class="weui-uploader__file-content">示例</view> -->
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="weui-cell">
+                <view class="weui-cell__hd">
+                    <view class="weui-label">轮胎安装照片</view>
+                </view>
+                <view class="weui-cell__bd">
+                    <view class="weui-uploader  pull-right">
+                        <view class="weui-uploader__input-box" wx:if="{{!tyreInstallationImageFileID}}">
+                            <view class="weui-uploader__input" bindtap="chooseImage" data-name="tyreInstallation"></view>
+                        </view>
+                        <view class="weui-uploader__file weui-uploader__file_status" bindtap="chooseImage" mode="aspectFill" data-name="tyreInstallation" wx:else>
+                            <image class="weui-uploader__img" src="{{tyreInstallationImageFileUrl}}" />
+                            <!-- <view class="weui-uploader__file-content">示例</view> -->
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
+    <view class="submit-button-container">
+        <button class="weui-btn submit-button" hover-class="submit-button-hover" bindtup="onSubmit" wx:if="{{!viewMode}}">
+            提交申请
+        </button>
+        <button class="weui-btn delete-button" hover-class="delete-button-hover" bindtap="onRemoveWarranty" wx:if="{{canDelete}}">
+            撤销此条申请
+        </button>
     </view>
 </view>

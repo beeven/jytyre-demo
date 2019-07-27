@@ -1,0 +1,82 @@
+page {
+    background: #333333;
+    color: white;
+}
+
+.weui-cells {
+    background: #333333;
+    margin: 10rpx 40rpx;
+}
+
+.weui-cells::after {
+    border: none;
+}
+
+.weui-cell::before {
+    border: none;
+}
+.weui-cell {
+    margin-bottom: 30rpx;
+    background: #444444;
+}
+
+.shop-address {
+    padding: 10rpx 0;
+}
+
+.fields {
+    width: 100%;
+    padding-left: 40rpx;
+    padding-right: 40rpx;
+}
+
+.pull-right>view {
+    float:right;
+}
+
+
+ .input-plate-image {
+
+    padding: 10px 15px;
+}
+
+
+
+
+.weui-uploader__input-box,
+.weui-uploader__file {
+    margin: 0;
+    width: 50px;
+    height: 50px;
+    border: 1px solid #d9d9d9;
+}
+
+.weui-uploader__img {
+    width: 50px;
+    height: 50px;
+}
+
+
+
+.weui-vcode-btn {
+    color: rgba(245, 32, 32, 0.7);
+}
+
+.submit-button-container {
+    margin-top: 40rpx;
+    width: 100%;
+}
+
+.submit-button {
+    background: rgba(182, 25, 25, 0.8);
+    color: white;
+    display: block;
+    margin: 0 40rpx;
+    border-radius: 100rpx;
+}
+
+.submit-button-hover {
+    color: #999;
+    background: rgba(182, 25, 25, 0.3);
+}
+

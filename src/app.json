@@ -3,8 +3,7 @@
     "pages/index/index",
     "pages/userConsole/userConsole",
     "pages/warranty/warranty",
-    "pages/warranty/detail/detail",
-    "pages/warranty/add/add"
+    "pages/warranty/detail/detail"
   ],
   "window": {
     "backgroundColor": "transparent",

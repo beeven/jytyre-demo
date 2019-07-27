@@ -12,6 +12,7 @@ export interface WarrantyListItem {
     description: string;
     thumbnail: string;
     approvalStatus: ApprovalStatus;
+    isDeleting: boolean;
 }
 
 export interface WarrantyPageData {
@@ -22,25 +23,20 @@ export interface WarrantyPageData {
 export interface WarrantyPage {
     onItemClicked(e: any): void;
     addNew(): void;
-    onItemRemoved(id: string): void;
     reloadList(): void;
-    onItemAdded(id: string, item: WarrantyListItem): void;
+    UpdateItem(id: string, item: WarrantyListItem): void;
 }
 
 Page<WarrantyPageData, WarrantyPage>({
     data: {
         loading: true,
         items: [
-        ]
+        ],
     } as WarrantyPageData,
     async onLoad() {
         await app.ensureLogin();
         await this.reloadList();
 
-    },
-
-    onShow() {
-        console.log(this.route);
     },
 
     onItemClicked(e: event.Touch) {
@@ -56,23 +52,27 @@ Page<WarrantyPageData, WarrantyPage>({
     async addNew() {
         let warrantyID = await warrantyService.createWarrantyItem();
         wx.navigateTo({
-            url: `./add/add?id=${warrantyID}`
+            url: `./detail/detail?id=${warrantyID}`
         })
     },
 
 
-    async onItemRemoved(id: string) {
-        let items = this.data.items;
-        let i = items.findIndex(x => x.id == id);
-        items.splice(i,1);
-        this.setData({
-            items: items
-        });
-    },
 
-    async onItemAdded(id: string, item: WarrantyListItem) {
+    async UpdateItem(id: string, item: WarrantyListItem) {
         let items = this.data.items;
-        items.push(item)
+        let i = items.findIndex(x => x.id === id);
+        if (item.isDeleting) {
+            if (i != -1) {
+                items.splice(i, 1)
+            }
+        } else {
+            if (i != -1) {
+                items.splice(i, 1, item);
+            } else {
+                items.push(item)
+            }
+        }
+
         this.setData({
             items: items
         });
@@ -90,17 +90,18 @@ Page<WarrantyPageData, WarrantyPage>({
             icon: 'loading',
             duration: 10000
         });
-        await warrantyService.samplingDatabase();
+        //await warrantyService.samplingDatabase();
         let warrantyItems = await warrantyService.loadWarrantyItems();
 
         let viewItems: WarrantyListItem[] = [];
         warrantyItems.forEach(item => {
             viewItems.push({
                 id: item._id,
-                plateNumber: item.plateNumber,
+                plateNumber: item.plateNumber ? item.plateNumber : '车牌未填写',
                 thumbnail: item.thumbnail,
-                description: item.endDate? `质保期限： ${moment(item.endDate).format("YYYY-MM-DD")}` : "",
-                approvalStatus: item.approvalStatus
+                description: item.endDate ? `质保期限： ${moment(item.endDate).format("YYYY-MM-DD")}` : "",
+                approvalStatus: item.approvalStatus,
+                isDeleting: false
             });
         })
         console.log(warrantyItems);
