@@ -34,7 +34,7 @@ Page<WarrantyPageData, WarrantyPage>({
     },
 
     onItemClicked(e: event.Touch) {
-        console.log(e);
+        //console.log(e);
         let itemId = e.currentTarget.dataset["itemId"];
         wx.navigateTo({
             url: "./detail/detail?id=" + itemId,
@@ -99,7 +99,7 @@ Page<WarrantyPageData, WarrantyPage>({
 
             viewItems.push(i);
         })
-        console.log(viewItems);
+        //console.log(viewItems);
 
         wx.hideToast();
         this.setData({

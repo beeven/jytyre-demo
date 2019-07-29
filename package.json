@@ -1,6 +1,6 @@
 {
   "name": "jytyre-demo",
-  "version": "0.0.5",
+  "version": "0.0.10",
   "scripts": {
     "compile": "./node_modules/typescript/bin/tsc",
     "tsc": "node ./node_modules/typescript/lib/tsc.js",
@@ -22,6 +22,8 @@
     "clean-webpack-plugin": "^1.0.0",
     "commitizen": "^4.0.3",
     "concurrently": "^4.1.1",
+    "conventional-changelog": "^3.1.10",
+    "conventional-changelog-cli": "^2.0.23",
     "copy-webpack-plugin": "^4.6.0",
     "cssnano": "^4.1.7",
     "cz-conventional-changelog": "^3.0.2",

@@ -168,7 +168,7 @@ async function loadUserInfo() {
     if (app.globalData.useCloud && app.globalData.openid) {
         const db = wx.cloud.database();
         let res = await db.collection("users").doc(app.globalData.openid).get();
-        console.log(res.data);
+        //console.log(res.data);
         return res.data;
     } else {
         // TODO: load user from server logic

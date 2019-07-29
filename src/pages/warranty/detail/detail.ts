@@ -102,11 +102,11 @@ Page({
     onReady(){
     },
     onShow() {
-        console.log("onShow");
+        //console.log("onShow");
     },
 
     async onUnload() {
-        console.log("onUnload")
+        //console.log("onUnload")
 
         let pages = getCurrentPages();
         let page = pages[pages.length - 2] as unknown as WarrantyPage;
@@ -143,7 +143,7 @@ Page({
     onGetLocation() {
         wx.chooseLocation({
             success: res => {
-                console.log(res);
+                //console.log(res);
                 this.setData({
                     shopAddress: res.address,
                     shopLocation: {
@@ -154,7 +154,7 @@ Page({
                 });
             },
             fail: err => {
-                console.log(err);
+                //console.log(err);
                 wx.showToast({
                     title: '获取定位失败',
                     icon: 'none',
@@ -193,7 +193,7 @@ Page({
                 plateImageFileUrl: imgFileUrl
             })
         } catch (err) {
-            console.log(err);
+            //console.log(err);
             return;
         }
 

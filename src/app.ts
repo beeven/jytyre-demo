@@ -178,13 +178,13 @@ function getOpenIDCloud() {
       name: 'login',
       data: {},
       success: res => {
-        console.log('[云函数] [login] user openid: ', res.result);
+        //console.log('[云函数] [login] user openid: ', res.result);
         let openid = res.result.openid;
         app.globalData.openid = openid
         resolve(openid);
       },
       fail: err => {
-        console.error('[云函数] [login] 调用失败', err)
+        //console.error('[云函数] [login] 调用失败', err)
         reject(err);
       }
     });
