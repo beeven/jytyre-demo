@@ -135,6 +135,6 @@ module.exports = {
     ]
   },
   watchOptions: {
-    ignored: [/node_modules/, /dist/, /\.ts$/]
+    ignored: [/node_modules/, /dist/, /\.ts$/, /cloudfunctions/]
   }
 }

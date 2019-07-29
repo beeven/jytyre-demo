@@ -61,13 +61,16 @@
             </view>
             <view class="weui-cell__ft">
                 <view class="weui-uploader">
-                    <view class="weui-uploader__input-box" wx:if="{{!plateImageFileID}}">
-                        <view class="weui-uploader__input" bindtap="onScanPlate"></view>
-                    </view>
-                    <view class="weui-uploader__file" bindtap="onScanPlate" wx:else>
+                    <view class="plate-image__input-box" bindtap="onScanPlate">
+                        <view class="weui-uploader__input"></view>
+                        <view class="weui-uploader__cross_horizontal"></view>
+                        <view class="weui-uploader__cross_vertical"></view>
                         <canvas style="width:50px; height: 50px;" canvas-id="cropCanvas"></canvas>
-                        <!-- <image class="weui-uploader__img" src="{{plateImageFileUrl}}" mode="aspectFit" bindtap="onScanPlate" /> -->
                     </view>
+                    <!-- <view class="weui-uploader__file" bindtap="onScanPlate2">
+                        
+                        
+                    </view> -->
                 </view>
             </view>
         </view>
@@ -112,7 +115,7 @@
             </view>
         </view>
     </view>
-    <view class="submit-button-container">
+    <view class="buttons-container">
         <button class="weui-btn submit-button" hover-class="submit-button-hover" bindtap="onSubmit" wx:if="{{!viewMode}}">
             提交申请
         </button>

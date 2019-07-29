@@ -2,8 +2,9 @@
   "compilerOptions": {
     "strictNullChecks": true,
     "noImplicitAny": false,
-    "module": "CommonJS",
+    "module": "commonjs",
     "target": "ES2015",
+    "moduleResolution":"node",
     "allowJs": true,
     "experimentalDecorators": true,
     "noImplicitThis": true,
@@ -18,17 +19,16 @@
     "removeComments": true,
     "pretty": true,
     "strictPropertyInitialization": true,
-    "typeRoots": [
-      "node_modules/@beeven/miniprogram-typings"
-    ],
     "lib": [
-      "es6",
+      "es2018",
       "es2017",
+      "es2016",
+      "es2015",
       "dom"
     ]
   },
   "include": [
-    "./src/**/*.ts"
+    "./**/*.ts"
   ],
   "exclude": [
     "node_modules",

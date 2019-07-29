@@ -91,11 +91,18 @@ Page({
         }
 
         if(this.data.thumbnail) {
+            console.log("drawing thumbnail")
             const ctx = wx.createCanvasContext("cropCanvas");
-            ctx.drawImage(this.data.thumbnail, 0,0);
+            ctx.drawImage(this.data.thumbnail, 0,0,50,50);
             ctx.draw();
             // this.data["cropCanvasContext"] = ctx;
         }
+        
+    },
+    onReady(){
+    },
+    onShow() {
+        console.log("onShow");
     },
 
     async onUnload() {
@@ -190,25 +197,17 @@ Page({
             return;
         }
 
-        
         try {
-            wx.showLoading({ title: "图片上传中", mask: true });
-            let fileID = await warrantyService.uploadImage(this.data.warrantyID, imgFileUrl, "licensePlate");
-            //wx.hideLoading();
-            this.setData({
-                plateImageFileID: fileID
-            })
-            wx.showLoading({ title: "识别车牌中" })
-            console.log(fileID);
-            let ret = await warrantyService.getPlateNumber(fileID);
+            let thumbnailData = await this.getThumbnail(imgFileUrl);
+            wx.showLoading({
+                title:'图片上传中'
+            });
+            let ret = await warrantyService.uploadPlateImage(this.data.warrantyID, imgFileUrl);
             wx.hideLoading();
             this.setData({
-                plateNumber: ret.plateNumber
-            });
-
-            let thumbnailData = await this.getThumbnail(imgFileUrl);
-            this.setData({
-                thumbnail: thumbnailData
+                thumbnail: thumbnailData,
+                plateNumber: ret.plateNumber,
+                plateImageFileID: ret.fileID
             });
         } catch (err) {
             wx.hideLoading();
